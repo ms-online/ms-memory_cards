@@ -18,20 +18,21 @@ let currentActiveCard = 0;
 const cardsEl = [];
 
 // 创建变量存储card里面的数据
-const cardsData = [
-  {
-    question: "DOM 事件有哪些阶段",
-    answer: "分为三大阶段：捕获阶段--目标阶段--冒泡阶段"
-  },
-  {
-    question: "js有哪些数据类型",
-    answer: "Undefined、Null、Boolean、Number、String、Object"
-  },
-  {
-    question: "主流浏览器有哪些",
-    answer: "IE、火狐（Firefox）、谷歌（Chrome）、Safari和Opera"
-  }
-];
+const cardsData = getCardsData();
+// const cardsData = [
+//   {
+//     question: "DOM 事件有哪些阶段",
+//     answer: "分为三大阶段：捕获阶段--目标阶段--冒泡阶段"
+//   },
+//   {
+//     question: "js有哪些数据类型",
+//     answer: "Undefined、Null、Boolean、Number、String、Object"
+//   },
+//   {
+//     question: "主流浏览器有哪些",
+//     answer: "IE、火狐（Firefox）、谷歌（Chrome）、Safari和Opera"
+//   }
+// ];
 
 //创建cards获得数据
 function createCards() {
@@ -71,6 +72,17 @@ function updateCurrentText() {
   currentEl.innerText = `${currentActiveCard + 1}/${cardsEl.length}`;
 }
 
+// 从本地存储获取data数据
+function getCardsData() {
+  const cards = JSON.parse(localStorage.getItem("cards"));
+  return cards === null ? [] : cards;
+}
+
+// 进行本地存储
+function setCardsData(cards) {
+  localStorage.setItem("cards", JSON.stringify(cards));
+  window.location.reload();
+}
 createCards();
 
 // 事件监听
@@ -98,4 +110,37 @@ prevBtn.addEventListener("click", () => {
 
   cardsEl[currentActiveCard].className = "card active";
   updateCurrentText();
+});
+
+// 显示add container
+showBtn.addEventListener("click", () => addContainer.classList.add("show"));
+
+// 隐藏add container
+hideBtn.addEventListener("click", () => addContainer.classList.remove("show"));
+
+// 添加卡片
+addCardBtn.addEventListener("click", () => {
+  const question = questionEl.value;
+  const answer = answerEl.value;
+  //   console.log(question, answer);
+
+  if (question.trim() && answer.trim()) {
+    const newCard = { question, answer };
+
+    createCard(newCard);
+
+    question.value = "";
+    answer.value = "";
+
+    addContainer.classList.remove("show");
+    cardsData.push(newCard);
+    setCardsData(cardsData);
+  }
+});
+
+// 一键清除
+clearBtn.addEventListener("click", () => {
+  localStorage.clear();
+  cardsContainer.innerHTML = "";
+  window.location.reload();
 });
