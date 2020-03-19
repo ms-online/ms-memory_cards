@@ -72,3 +72,30 @@ function updateCurrentText() {
 }
 
 createCards();
+
+// 事件监听
+// 下一页
+nextBtn.addEventListener("click", () => {
+  cardsEl[currentActiveCard].className = "card left";
+
+  currentActiveCard = currentActiveCard + 1;
+  if (currentActiveCard > cardsEl.length - 1) {
+    currentActiveCard = cardsEl.length - 1;
+  }
+
+  cardsEl[currentActiveCard].className = "card active";
+  updateCurrentText();
+});
+
+// 上一页
+prevBtn.addEventListener("click", () => {
+  cardsEl[currentActiveCard].className = "card right";
+
+  currentActiveCard = currentActiveCard - 1;
+  if (currentActiveCard < 0) {
+    currentActiveCard = 0;
+  }
+
+  cardsEl[currentActiveCard].className = "card active";
+  updateCurrentText();
+});
